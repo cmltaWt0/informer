@@ -1,12 +1,18 @@
-#! /usr/bin/python
+#!/usr/bin/python
 #encoding: utf-8
+'''
+Created on 21.12.2011
+
+@author: maksim
+'''
 
 from Tkinter import *
-from view_notify import *
-
-"""View for AON service"""
+from view_notify import view_notify
 
 class Application(Frame):
+    '''
+    classdocs
+    '''
 
     def createWidgets(self):
         self.QUIT = Button(self)
@@ -16,12 +22,14 @@ class Application(Frame):
 
         self.QUIT.pack({"side": "left"})
 
-
     def __init__(self, master=None):
+        '''
+        Constructor
+        '''
         Frame.__init__(self, master)
         self.pack()
         self.createWidgets()
-
+        
 def view_tk(data):
     root = Tk()
     app = Application(master=root)

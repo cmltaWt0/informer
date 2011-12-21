@@ -1,5 +1,11 @@
 #!/usr/bin/python
 #encoding: utf-8
+'''
+Created on 21.12.2011
+
+@author: maksim
+'''
+
 
 import pynotify
 

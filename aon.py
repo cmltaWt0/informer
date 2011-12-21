@@ -1,11 +1,16 @@
 #!/usr/bin/python
 #encoding: utf-8
+'''
+Created on 21.12.2011
+
+@author: maksim
+'''
 
 import telnetlib
-import smtplib
+#import smtplib
 import os
 import time
-from view_tk import *
+#from view_tk import *
 
 """AON service.
 
@@ -29,7 +34,7 @@ def str_parsing(str_all, str_search, pars_id = 1):
     return call
 
 host = "192.168.52.6" # IP сервера с логами звонков
-file_out = '/home/maksim/python/aon/log/aon.' + str(time.asctime())
+file_out = '/home/maksim/.aon/log/aon.' + str(time.asctime())
 
 
 while True:
@@ -55,26 +60,27 @@ while True:
                 time.sleep(5)
                 tn = telnetlib.Telnet(host)
             else:
-                str_a = tn.read_until("\r\r\n\r\n")
+                str_a = tn.read_until('\r\r\n\r\n')
                 call2 = str_parsing(str_a, str_search2) # Результат поиска
                 if call2 == 0: # Отрицательный результат
                     pass
                 else:
                     result = (TEXT + str("".join(call2)))
                     
-                    try:
-                        server.sendmail(FROM, TO, result)
-                    except:
-                        try:
-                            server = smtplib.SMTP('localhost')
-                            server.sendmail(FROM, TO, result)
-                            view_tk(result)
-                        except:
-                            with open(file_out, 'a') as f:
-                                f.write('Нет подключения к SMTP серверу...' + '\n')
-                                f.write(result + '\n')
-                            view_tk(result)
-                    else:
-                        with open(file_out, 'a') as f:
-                                f.write(result + '\n')
-                        view_tk(result)
+                    #try:
+                    #    server.sendmail(FROM, TO, result)
+                    #except:
+                    #    try:
+                    #        server = smtplib.SMTP('localhost')
+                    #        server.sendmail(FROM, TO, result)
+                    #        view_tk(result)
+                    #    except:
+                    #        with open(file_out, 'a') as f:
+                    #            f.write('Нет подключения к SMTP серверу...' + '\n')
+                    #            f.write(result + '\n')
+                    #        view_tk(result)
+                    #else:
+                    print(result)
+                    with open('/home/maksim/test', 'a') as f:
+                            f.write(result + '\n')
+ #                   view_tk(result)

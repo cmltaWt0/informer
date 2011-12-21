@@ -1,0 +1,9 @@
+*.pyc
+*.c
+*.so
+NOTES.txt
+*.swp
+*.txt
+.project
+.pydevproject
+.settings/

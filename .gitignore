@@ -7,4 +7,4 @@ NOTES.txt
 .project
 .pydevproject
 .settings/
-*.log
+*aon.log

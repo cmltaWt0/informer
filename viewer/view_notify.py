@@ -15,4 +15,5 @@ def view_notify(data):
     n = pynotify.Notification("Входящий звонок", data)
     n.set_hint('x', 200)
     n.set_hint('y', 400)
+    pynotify.init("aon")
     n.show()

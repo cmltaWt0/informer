@@ -10,7 +10,15 @@ import telnetlib
 #import smtplib
 import os
 import time
-#from view_tk import *
+from viewer import view_tk
+import time
+
+
+year = str(time.localtime().tm_year)
+mon = str(time.localtime().tm_mon)
+day = str(time.localtime().tm_mday)
+hour = str(time.localtime().tm_hour)
+minuts = str(time.localtime().tm_min)
 
 """AON service.
 
@@ -34,7 +42,7 @@ def str_parsing(str_all, str_search, pars_id = 1):
     return call
 
 host = "192.168.52.6" # IP сервера с логами звонков
-file_out = '/home/maksim/.aon/log/aon.' + str(time.asctime())
+file_out = '/home/maksim/Dropbox/Work/Programming/python/aon/log/' + str(time.localtime().tm_mday)+'.'+str(time.localtime().tm_mon)+'.'+str(time.localtime().tm_year)+'-aon.log'
 
 
 while True:
@@ -80,7 +88,11 @@ while True:
                     #            f.write(result + '\n')
                     #        view_tk(result)
                     #else:
-                    print(result)
-                    with open('/home/maksim/test', 'a') as f:
-                            f.write(result + '\n')
+#                    print(result)
+                    #with open('/home/maksim/test', 'a') as f:
+                    #        f.write(result + '\n')
  #                   view_tk(result)
+                    with open(file_out, 'a') as f:
+                        #f.write('Нет подключения к SMTP серверу...' + '\n')
+                        f.write(result + '\n')
+                    view_tk.view_tk(result)

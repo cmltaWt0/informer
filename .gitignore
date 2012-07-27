@@ -7,3 +7,5 @@ NOTES.txt
 .project
 .pydevproject
 .settings/
+log/
+*.log

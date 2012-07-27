@@ -52,13 +52,13 @@ while True:
         time.sleep(5)
     else:
         str_search2 = '577140400' # Искомый номер
-        try:
-            server = smtplib.SMTP('localhost')
-        except:
-            pass
-        FROM = "maksim@laptop.localdomain"
-        TO = ["maksim@laptop.localdomain"]
-        SUBJECT = "Incoming Call." # Пока не используется
+        #try:
+        #    server = smtplib.SMTP('localhost')
+        #except:
+        #    pass
+        #FROM = "maksim@laptop.localdomain"
+        #TO = ["maksim@laptop.localdomain"]
+        #SUBJECT = "Incoming Call." # Пока не используется
         TEXT = "Incoming call from "
         
         while True:

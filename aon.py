@@ -39,12 +39,11 @@ def str_parsing(str_all, str_search, pars_id = 1):
     search_list = str_all.split()
 
     if str_search in search_list:
-        call_id = search_list[-4] #Caller-id recognizing
-        call_time = search_list[0] + ':' + search_list[2] #Call time recognizing
-        result = " ".join(call_time.split("/")[1:3])
-        return '0' + call_id + ' ' + result #Result formatting
-    else:
-        return False
+        call_id = search_list[-4] #Caller-id recognizing     
+        call_time = search_list[-19].split('/')[1] + ' ' + \
+                    search_list[-19].split('/')[2] + ':' + \
+                    search_list[-17] #Call time recognizing
+        return '0' + call_id + ' ' + call_time #Result formatting
 
 #def send_smtp():   
 #    try:
@@ -65,27 +64,28 @@ def str_parsing(str_all, str_search, pars_id = 1):
 #        f.write(result + '\n')
 #    view_tk(result)
 
-while True:
-    try:
-        tn = telnetlib.Telnet(host)
-    except:
-        time.sleep(5)
-    else:
-        while True:
-            try:
-                ts=tn.sock_avail()
-            except:
-                time.sleep(5)
-                tn = telnetlib.Telnet(host)
-            else:
-                str_a = tn.read_until('\r\r\n\r\n')
-                call_info = str_parsing(str_a, str_search) #Search results
+if __name__ == "__main__": 
+    while True:
+        try:
+            tn = telnetlib.Telnet(host)
+        except:
+            time.sleep(5)
+        else:
+            while True:
+                try:
+                    ts=tn.sock_avail()
+                except:
+                    time.sleep(5)
+                    tn = telnetlib.Telnet(host)
+                else:
+                    str_a = tn.read_until('\r\r\n\r\n')
+                    call_info = str_parsing(str_a, str_search) #Search results
                 
-                if type(call_info) == type('string'): #Not negative result
-                    result = (TEXT + str("".join(call_info)))
+                    if call_info is not None: #Not negative result
+                        result = (TEXT + str("".join(call_info)))
 
-#                    send_smtp()
+#                      send_smtp()
                     
-                    with open(file_out, 'a') as f:
-                        f.write(result + '\n')
-                    view_tk.view_tk(result)
+                        with open(file_out, 'a') as f:
+                            f.write(result + '\n')
+                        view_tk.view_tk(result)

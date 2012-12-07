@@ -6,7 +6,6 @@ import telnetlib
 import os
 import time
 from viewer import view_tk
-import time
 
 
 """
@@ -19,33 +18,47 @@ day = str(time.localtime().tm_mday)
 hour = str(time.localtime().tm_hour)
 minuts = str(time.localtime().tm_min)
 
-host = "192.168.52.6" # Sip-server IP-address
-file_out = os.getcwd() + '/log/' + str(time.localtime().tm_mday) \
-           +'.'+ str(time.localtime().tm_mon) + \
-           '.' + str(time.localtime().tm_year) + '-aon.log'
-str_search = '577140400' #Searched phone number
+host = "192.168.52.6"  # Sip-server IP-address
+
+
+file_out = os.path.dirname(os.path.realpath(__file__)) + '/log/' + \
+            str(time.localtime().tm_mday) + \
+            '.' + str(time.localtime().tm_mon) + \
+            '.' + str(time.localtime().tm_year) + '-aon.log'
+file_err = os.path.dirname(os.path.realpath(__file__)) + '/log/' + \
+            str(time.localtime().tm_mday) + \
+            '.' + str(time.localtime().tm_mon) + \
+            '.' + str(time.localtime().tm_year) + '-aon.err'
+
+str_search = '577140400'  # Searched phone number
 #FROM = "maksim@laptop.localdomain"
 #TO = ["maksim@laptop.localdomain"]
 #SUBJECT = "Incoming Call." # Not utilizing yet
 TEXT = "Incoming call from "
 
-def str_parsing(str_all, str_search, pars_id = 1):
-    
+
+def str_parsing(str_all, str_search, pars_id=1):
+
     """Проверка наличия искомого номера.
-    Функция str_parsing проверяет наличие искомого номера 
+    Функция str_parsing проверяет наличие искомого номера
     в списке элементов строки с телнет сессии и выдает
     как результат номер звонивщегоей и время звонка"""
-    
-    search_list = str_all.split()
 
-    if str_search in search_list:
-        call_id = search_list[-4] #Caller-id recognizing     
-        call_time = search_list[-19].split('/')[1] + ' ' + \
-                    search_list[-19].split('/')[2] + ':' + \
-                    search_list[-17] #Call time recognizing
-        return '0' + call_id + ' ' + call_time #Result formatting
+    if not isinstance(str_all, str) or not isinstance(str_search, str):
+        raise TypeError('Input string type value please.')
+    elif str_all == '' or str_all == ' ' \
+    or str_search == '' or str_search == ' ':
+        raise ValueError('Dont input space or empty string.')
+    else:
+        search_list = str_all.split()
+        if str_search in search_list:
+            call_id = search_list[-4]  # Caller-id recognizing
+            call_time = search_list[-19].split('/')[1] + ' ' + \
+                        search_list[-19].split('/')[2] + ':' + \
+                        search_list[-17]  # Call time recognizing
+            return '0' + call_id + ' ' + call_time  # Result formatting
 
-#def send_smtp():   
+#def send_smtp():
 #    try:
 #        server.sendmail(FROM, TO, result)
 #    except:
@@ -64,7 +77,7 @@ def str_parsing(str_all, str_search, pars_id = 1):
 #        f.write(result + '\n')
 #    view_tk(result)
 
-if __name__ == "__main__": 
+if __name__ == "__main__":
     while True:
         try:
             tn = telnetlib.Telnet(host)
@@ -73,19 +86,30 @@ if __name__ == "__main__":
         else:
             while True:
                 try:
-                    ts=tn.sock_avail()
+                    ts = tn.sock_avail()
                 except:
                     time.sleep(5)
                     tn = telnetlib.Telnet(host)
                 else:
                     str_a = tn.read_until('\r\r\n\r\n')
-                    call_info = str_parsing(str_a, str_search) #Search results
-                
-                    if call_info is not None: #Not negative result
-                        result = (TEXT + str("".join(call_info)))
+                    try:
+                        call_info = str_parsing(str_a, str_search)  # Results
+                    except:
+                        try:
+                            with open(file_err, 'a') as f:
+                                f.write('Exception: Value or Type (need to \
+                                implement later)' + '\n')
+                        except:
+                            print("Trouble with file_err." + file_err)
+                    else:
+                        if call_info is not None:  # Not negative result
+                            result = (TEXT + str("".join(call_info)))
 
-#                      send_smtp()
-                    
-                        with open(file_out, 'a') as f:
-                            f.write(result + '\n')
-                        view_tk.view_tk(result)
+#                           send_smtp()
+                            try:
+                                with open(file_out, 'a') as f:
+                                    f.write(result + '\n')
+                            except:
+                                print("Trouble with file_out." + file_out)
+
+                            view_tk.view_tk(result)

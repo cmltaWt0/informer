@@ -1,6 +1,7 @@
 from Tkinter import *
 from view_notify import view_notify
 
+
 class Application(Frame):
 
     def createWidgets(self):
@@ -15,7 +16,8 @@ class Application(Frame):
         Frame.__init__(self, master)
         self.pack()
         self.createWidgets()
-        
+
+
 def view_tk(data):
     root = Tk()
     app = Application(master=root)

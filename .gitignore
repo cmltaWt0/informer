@@ -8,3 +8,4 @@ NOTES.txt
 .pydevproject
 .settings/
 *aon.log
+*aon.err

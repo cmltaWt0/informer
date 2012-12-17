@@ -6,16 +6,18 @@ test_str2 = '    NCEN=VELTON/12-12-05/16 H 59 IDENTIFICATION OF MALICIOUS CALLS\
 
 
 class TestAon(unittest.TestCase):
-    '''
+    """
     TestCase for AON app.
-    '''
+    """
     def test_parsing(self):
-        '''
+        """
         Test for correct input value to str_parsing.
-        '''
-        self.assertEqual(str_parsing(test_str, '577177736'), '0952357487 12-12-05 16:57')
+        """
+        self.assertEqual(str_parsing(test_str, '577177736'),
+                                     '0952357487 12-12-05 16:57')
         self.assertEqual(str_parsing(test_str, '577177737'), None)
-        self.assertEqual(str_parsing(test_str2, '577174414'), '0577177751 12-12-05 16:59')
+        self.assertEqual(str_parsing(test_str2, '577174414'),
+                                     '0577177751 12-12-05 16:59')
         self.assertEqual(str_parsing(test_str2, '577174415'), None)
         self.assertRaises(TypeError, str_parsing, test_str, 999)
         self.assertRaises(TypeError, str_parsing, 999, 999)

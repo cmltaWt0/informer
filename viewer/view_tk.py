@@ -19,6 +19,8 @@ class Application(Frame):
 
 
 def view_tk(data):
+    """Input data - string. Displaying this string using view_notify and Tk"""
+
     root = Tk()
     app = Application(master=root)
     app.mainloop()

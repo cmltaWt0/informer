@@ -5,10 +5,6 @@ import time
 from viewer.view_tk import view_tk
 
 
-"""
-AON service.
-"""
-
 host = "192.168.52.6"  # Log-server IP-address
 
 
@@ -28,11 +24,10 @@ str_search = '577140400'  # Searched phone number
 TEXT = "Incoming call from "
 
 
-def str_parsing(str_all, str_search, pars_id=1):
-
+def str_parsing(str_all, str_search):
     """Searching for a number(str_search) in str_all.
     Assume that str_all and str_search is a not empty string
-    Result = string contaning caller_id and date-time of call"""
+    Result = string of caller_id and date-time of call"""
 
     if not isinstance(str_all, str) or not isinstance(str_search, str):
         raise TypeError('Input string type value please.')
@@ -48,6 +43,7 @@ def str_parsing(str_all, str_search, pars_id=1):
                         search_list[-17]  # Call time recognizing
             return '0' + call_id + ' ' + call_time  # Result formatting
 
+
 #def send_smtp():
 #    try:
 #        server.sendmail(FROM, TO, result)
@@ -62,6 +58,7 @@ def str_parsing(str_all, str_search, pars_id=1):
 
 
 def writing_log(file_path, text, err=''):
+    """Writing text to file_path file with some err. If no err is present - writing nothing."""
     try:
         with open(file_path, 'a') as f:
             f.write(str(time.localtime().tm_year) + '-' +

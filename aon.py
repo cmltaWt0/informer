@@ -87,7 +87,7 @@ def main():
                     time.sleep(5)
                     tn = telnetlib.Telnet(host)
                 else:
-                    str_all = tn.read_until('\r\r\n\r\n')
+                    str_all = str(tn.read_until(b'\r\r\n\r\n'))
                     try:
                         call_info = str_parsing(str_all, str_search)  # Parsing
                     except (TypeError, ValueError) as e:

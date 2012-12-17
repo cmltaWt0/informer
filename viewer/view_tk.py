@@ -1,5 +1,5 @@
-from Tkinter import *
-from view_notify import view_notify
+from tkinter import *
+from .view_notify import view_notify
 
 
 class Application(Frame):

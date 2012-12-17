@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/python3
 #encoding: utf-8
 
 """AON application's goal is to parse some Log-server output and show missed

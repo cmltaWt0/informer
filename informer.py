@@ -9,8 +9,8 @@ In the future, the application must be finalized in some GUI-interface.
 Need to implement running in Windows.
 """
 
-from aon import main
+from parser.vlt_parser import vlt_parser
 
 
 if __name__ == "__main__":
-    main()
+    vlt_parser()

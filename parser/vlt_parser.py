@@ -1,23 +1,24 @@
+__author__ = 'Maksim Sokolski'
+
 import os
 import time
 import pickle
 
 import telnetlib
-#import smtplib
 
 from viewer.notify import view_tk
 from contact.contact import Contact
 
 
-FILE_OUT = os.path.dirname(os.path.realpath(__file__)) + '/log/' + \
-            str(time.localtime().tm_mday) + \
-            '.' + str(time.localtime().tm_mon) + \
-            '.' + str(time.localtime().tm_year) + '-aon.log'
-FILE_ERR = os.path.dirname(os.path.realpath(__file__)) + '/log/' + \
-            str(time.localtime().tm_mday) + \
-            '.' + str(time.localtime().tm_mon) + \
-            '.' + str(time.localtime().tm_year) + '-aon.err'
-FILE_DUMP = os.path.dirname(os.path.realpath(__file__)) + '/contact/book.pk'
+FILE_OUT = os.path.dirname(os.path.realpath(__file__)) + '/../log/' +\
+           str(time.localtime().tm_mday) +\
+           '.' + str(time.localtime().tm_mon) +\
+           '.' + str(time.localtime().tm_year) + '-aon.log'
+FILE_ERR = os.path.dirname(os.path.realpath(__file__)) + '/../log/' +\
+           str(time.localtime().tm_mday) +\
+           '.' + str(time.localtime().tm_mon) +\
+           '.' + str(time.localtime().tm_year) + '-aon.err'
+FILE_DUMP = os.path.dirname(os.path.realpath(__file__)) + '/../contact/book.pk'
 
 HOST = "192.168.52.6"  # Log-server IP-address
 STR_SEARCH = '577140400'  # Searched phone number
@@ -37,30 +38,17 @@ def parse_string(str_all, STR_SEARCH):
 
     if not isinstance(str_all, str) or not isinstance(STR_SEARCH, str):
         raise TypeError('Input string type value please.')
-    elif str_all == '' or str_all == ' ' \
-    or STR_SEARCH == '' or STR_SEARCH == ' ':
+    elif str_all == '' or str_all == ' '\
+         or STR_SEARCH == '' or STR_SEARCH == ' ':
         raise ValueError('Dont input space or empty string.')
     else:
         search_list = str_all.split()
         if STR_SEARCH in search_list:
             call_id = search_list[-4]  # Caller-id recognizing
-            call_time = search_list[-19].split('/')[1] + ' ' + \
-                        search_list[-19].split('/')[2] + ':' + \
+            call_time = search_list[-19].split('/')[1] + ' ' +\
+                        search_list[-19].split('/')[2] + ':' +\
                         search_list[-17]  # Call time recognizing
             return ('0' + call_id, call_time)
-
-
-#def send_smtp():
-#    try:
-#        server.sendmail(FROM, TO, result)
-#    except Exception as e:
-#        try:
-#            writing_log(FILE_ERR, 'Trying to reassing connection. ', e)
-#            server = smtplib.SMTP('localHOST')
-#            server.sendmail(FROM, TO, result)
-#        except Exception as e:
-#            writing_log(FILE_ERR, 'Losing connection to SMTP... ', e)
-#            writing_log(FILE_OUT, result)
 
 
 def write_log(file_path, text, err=''):
@@ -89,12 +77,13 @@ def load_contacts():
     except IOError:
         return []
 
+
 def save_contacts(contacts_book):
     with open(FILE_DUMP, 'wb') as f:
         pickle.dump(contacts_book, f)
 
 
-def main():
+def vlt_parser():
     contacts_book = load_contacts()
     while True:
         try:

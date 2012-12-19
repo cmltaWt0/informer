@@ -11,7 +11,7 @@ class Contact(object):
         phone = string type
         email - string type
     """
-    def __init__(self, phone, first_name='Name', last_name='Second', email=''):
+    def __init__(self, phone, first_name='Unknown', last_name='Unknown', email=''):
         self.first_name = first_name
         self.first_name = first_name
         self.last_name = last_name

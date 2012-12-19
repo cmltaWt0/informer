@@ -1,6 +1,20 @@
 from tkinter import Tk, Frame, Button
 
 import notify2
+#import smtplib
+
+
+#def send_smtp():
+#    try:
+#        server.sendmail(FROM, TO, result)
+#    except Exception as e:
+#        try:
+#            writing_log(FILE_ERR, 'Trying to reassigning connection. ', e)
+#           server = smtplib.SMTP('HOST')
+#            server.sendmail(FROM, TO, result)
+#        except Exception as e:
+#            writing_log(FILE_ERR, 'Losing connection to SMTP... ', e)
+#            writing_log(FILE_OUT, result)
 
 
 class Application(Frame):

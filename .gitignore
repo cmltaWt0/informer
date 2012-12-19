@@ -9,6 +9,5 @@ NOTES.txt
 .settings/
 *aon.log
 *aon.err
-*.xml
-*.iml
 *.pk
+.idea/*

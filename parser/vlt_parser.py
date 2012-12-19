@@ -118,6 +118,5 @@ def vlt_parser():
                                 contacts_book.append(caller)
                                 save_contacts(contacts_book)
 
-#                           send_smtp()
                             write_log(FILE_OUT, result + ' ' + str(caller))
                             view_tk(result + '\n' + str(caller))

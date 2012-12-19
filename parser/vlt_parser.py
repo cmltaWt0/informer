@@ -83,8 +83,8 @@ def save_contacts(contacts_book):
         pickle.dump(contacts_book, f)
 
 
-def vlt_parser():
-    contacts_book = load_contacts()
+def vlt_parser(self):
+    """ VltParser class method. """
     while True:
         try:
             tn = telnetlib.Telnet(HOST)
@@ -109,14 +109,21 @@ def vlt_parser():
                         if call_info is not None:
                             result = TEXT + call_info[0] + ' ' + call_info[1]
 
-                            for contact in contacts_book:
+                            for contact in self.contacts_book:
                                 if call_info[0] == contact.phone:
                                     caller = contact
                                     break
                             else:
                                 caller = Contact(call_info[0])
-                                contacts_book.append(caller)
-                                save_contacts(contacts_book)
+                                self.contacts_book.append(caller)
+                                save_contacts(self.contacts_book)
 
                             write_log(FILE_OUT, result + ' ' + str(caller))
                             view_tk(result + '\n' + str(caller))
+
+
+class VltParser(object):
+    def __init__(self):
+        self.contacts_book = load_contacts()
+
+    vlt_parser = vlt_parser

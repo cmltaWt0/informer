@@ -24,6 +24,8 @@ HOST = "192.168.52.6"  # Log-server IP-address
 STR_SEARCH = '577140400'  # Searched phone number
 TEXT = "Incoming call from "
 
+CONTACTS_LOCK = threading.Lock()
+
 
 def vlt_parser(self):
     """ VltParser class's method. """
@@ -51,6 +53,7 @@ def vlt_parser(self):
                         if call_info is not None:
                             result = TEXT + call_info[0] + ' ' + call_info[1]
 
+                            self.CONTACTS_LOCK.acquire(1)
                             for contact in self.contacts_book:
                                 if call_info[0] == contact.phone:
                                     caller = contact
@@ -59,6 +62,7 @@ def vlt_parser(self):
                                 caller = Contact(call_info[0])
                                 self.contacts_book.append(caller)
                                 self.save_contacts()
+                            self.CONTACTS_LOCK.release()
 
                             self.write_log(FILE_OUT, result + ' ' + str(caller))
                             view_tk(result + '\n' + str(caller))
@@ -69,6 +73,7 @@ class VltParser(threading.Thread):
     def __init__(self):
         super().__init__()
         self.contacts_book = self.load_contacts()
+        self.CONTACTS_LOCK = CONTACTS_LOCK
 
     run = vlt_parser
 
@@ -119,4 +124,4 @@ class VltParser(threading.Thread):
                 call_time = search_list[-19].split('/')[1] + ' ' +\
                             search_list[-19].split('/')[2] + ':' +\
                             search_list[-17]  # Call time recognizing
-                return ('0' + call_id, call_time)
+                return '0' + call_id, call_time  # Tuple returning

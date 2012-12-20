@@ -22,7 +22,7 @@ class QtInformer(QtGui.QWidget):
 
     def __init__(self, THREAD_PARSER):
         super().__init__()
-        self.contacts_book = THREAD_PARSER.contacts_book
+        self.THREAD_PARSER = THREAD_PARSER
         self.initUI()
 
     def initUI(self):
@@ -32,7 +32,7 @@ class QtInformer(QtGui.QWidget):
 
     def closeEvent(self, event):
         reply = QtGui.QMessageBox.question(self, 'Message',
-            "Close telnet session?" + str(self.contacts_book),
+            "Close telnet session?\n" + str(self.THREAD_PARSER.contacts_book),
             QtGui.QMessageBox.Yes |
             QtGui.QMessageBox.No,
             QtGui.QMessageBox.No)

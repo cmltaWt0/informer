@@ -2,6 +2,7 @@
 
 
 class Contact(object):
+
     """
     Class for Contact data type.
 
@@ -11,6 +12,7 @@ class Contact(object):
         phone = string type
         email - string type
     """
+
     def __init__(self, phone, first_name='Unknown', last_name='Unknown', email=''):
         self.first_name = first_name
         self.first_name = first_name

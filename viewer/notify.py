@@ -1,7 +1,12 @@
 from tkinter import Tk, Frame, Button
+#import smtplib
 
 import notify2
-#import smtplib
+
+
+#FROM = "user@localdomain"
+#TO = ["user@localdomain"]
+#SUBJECT = "Incoming Call."
 
 
 #def send_smtp():
@@ -18,7 +23,9 @@ import notify2
 
 
 class Application(Frame):
+
     """ Main Tk windows. """
+
     def createWidgets(self):
         self.QUIT = Button(self)
         self.QUIT["text"] = "Display call info"
@@ -43,7 +50,10 @@ def view_notify(data):
 
 
 def view_tk(data):
-    """ Input data - string. Displaying this string using view_notify and Tk. """
+    """
+    Input data - string.
+    Displaying this string using view_notify and Tk.
+    """
     root = Tk()
     app = Application(master=root)
     app.mainloop()

@@ -1,5 +1,4 @@
-#!/usr/bin/python3
-#encoding: utf-8
+#!/usr/bin/env python3
 
 """
 Informer application's goal is to parse some Log-server output and show missed
@@ -11,16 +10,19 @@ Need to implement running in Windows.
 
 import sys
 import threading
+
 from PyQt4 import QtGui
 
 from parser.vlt_parser import VltParser
 
 
 class QtInformer(QtGui.QWidget):
+
     """ Main Informer Window. """
-    def __init__(self, parser):
+
+    def __init__(self, THREAD_PARSER):
         super().__init__()
-        self.contacts_book = parser.contacts_book
+        self.contacts_book = THREAD_PARSER.contacts_book
         self.initUI()
 
     def initUI(self):
@@ -42,20 +44,14 @@ class QtInformer(QtGui.QWidget):
             event.ignore()
 
 
-def qtWindow(contacts_book):
+def qtWindow(parser):
     app = QtGui.QApplication(sys.argv)
-    ex = QtInformer(contacts_book)
+    ex = QtInformer(parser)
     sys.exit(app.exec_())
 
 
-def parser_start(parser):
-    parser.vlt_parser()
-
-
-parser = VltParser()
-
-THREAD_PARSER = threading.Thread(target=parser_start, args=(parser,))
-THREAD_WINDOW = threading.Thread(target=qtWindow, args=(parser,))
+THREAD_PARSER = VltParser()
+THREAD_WINDOW = threading.Thread(target=qtWindow, args=(THREAD_PARSER,))
 
 
 def main():

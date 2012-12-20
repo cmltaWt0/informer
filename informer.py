@@ -9,7 +9,6 @@ Need to implement running in Windows.
 """
 
 import sys
-import threading
 
 from PyQt4 import QtGui
 
@@ -44,14 +43,13 @@ class QtInformer(QtGui.QWidget):
             event.ignore()
 
 
-def qtWindow(parser):
+def qtWindow(THREAD_PARSER):
     app = QtGui.QApplication(sys.argv)
-    ex = QtInformer(parser)
+    ex = QtInformer(THREAD_PARSER)
     sys.exit(app.exec_())
 
 
 THREAD_PARSER = VltParser()
-THREAD_WINDOW = threading.Thread(target=qtWindow, args=(THREAD_PARSER,))
 
 
 def main():
@@ -59,8 +57,8 @@ def main():
     Starting window and parsing process.
     Window process close parsing process at self close.
     """
-    THREAD_WINDOW.start()
     THREAD_PARSER.start()
+    qtWindow(THREAD_PARSER)
 
 
 if __name__ == '__main__':

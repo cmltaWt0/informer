@@ -25,7 +25,7 @@ CONTACTS_LOCK = threading.Lock()
 
 
 def vlt_parser(self):
-    """ VltParser class's method. """
+    """ VltParser's class method. """
     while True:
         try:
             tn = telnetlib.Telnet(HOST)

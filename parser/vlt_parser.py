@@ -1,23 +1,20 @@
 __author__ = 'Maksim Sokolski'
 
 import os
-import time
 import pickle
 import telnetlib
 import threading
+from time import sleep
+from datetime import datetime
 
 from viewer.notify import view_tk
 from contact.contact import Contact
 
 
-FILE_OUT = os.path.dirname(os.path.realpath(__file__)) + '/../log/' +\
-           str(time.localtime().tm_mday) +\
-           '.' + str(time.localtime().tm_mon) +\
-           '.' + str(time.localtime().tm_year) + '-aon.log'
-FILE_ERR = os.path.dirname(os.path.realpath(__file__)) + '/../log/' +\
-           str(time.localtime().tm_mday) +\
-           '.' + str(time.localtime().tm_mon) +\
-           '.' + str(time.localtime().tm_year) + '-aon.err'
+PATH = os.path.dirname(os.path.realpath(__file__)) + '/../log/' +\
+       "{:%d.%m.%Y}".format(datetime.now())
+FILE_OUT = PATH + '-aon.log'
+FILE_ERR = PATH + '-aon.err'
 FILE_DUMP = os.path.dirname(os.path.realpath(__file__)) + '/../contact/book.pk'
 
 HOST = "192.168.52.6"  # Log-server IP-address
@@ -34,14 +31,14 @@ def vlt_parser(self):
             tn = telnetlib.Telnet(HOST)
         except Exception as e:
             self.write_log(FILE_ERR, 'Connection to server is not available: ', e)
-            time.sleep(5)
+            sleep(5)
         else:
             while True:
                 try:
                     tn.sock_avail()
                 except Exception as e:
                     self.write_log(FILE_ERR, 'Connection is not active.', e)
-                    time.sleep(5)
+                    sleep(5)
                     tn = telnetlib.Telnet(HOST)
                 else:
                     str_all = str(tn.read_until(b'\r\r\n\r\n'))
@@ -96,11 +93,7 @@ class VltParser(threading.Thread):
         """
         try:
             with open(file_path, 'a') as f:
-                f.write(str(time.localtime().tm_year) + '-' +
-                    str(time.localtime().tm_mon) + '-' +
-                    str(time.localtime().tm_mday) + '-' +
-                    str(time.localtime().tm_hour) + ':' +
-                    str(time.localtime().tm_min) + ': ' +
+                f.write("{:%Y-%m-%d-%H:%M: }".format(datetime.now()) +
                     text + str(err) + '\n')
         except IOError as e:
             view_tk(str(e))

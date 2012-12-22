@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+# coding=utf-8
 
 """
 Informer application's goal is to parse some Log-server output and show missed

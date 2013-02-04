@@ -10,10 +10,11 @@ Need to implement running in Windows.
 """
 
 import sys
+import os
 
-from PyQt4 import QtGui
+from PyQt4 import QtGui, QtCore
 
-from parser.vlt_parser import VltParser
+from parsers.vlt_parser import VltParser
 
 
 class QtInformer(QtGui.QWidget):
@@ -28,6 +29,11 @@ class QtInformer(QtGui.QWidget):
     def initUI(self):
         self.setGeometry(1000, 200, 350, 550)
         self.setWindowTitle("Informer's main window")
+        self.setWindowIcon(QtGui.QIcon(os.path.dirname(os.path.realpath(__file__)) + 
+					'/call.png'))
+        self.btn = QtGui.QPushButton('Button', self)
+        self.connect(self.btn, QtCore.SIGNAL("clicked()"), self.clicked)
+        self.btn.setToolTip('This is a <b>QPushButton</b> widget')
         self.show()
 
     def closeEvent(self, event):
@@ -42,6 +48,9 @@ class QtInformer(QtGui.QWidget):
             event.accept()
         else:
             event.ignore()
+
+    def clicked(self):
+        QtGui.QMessageBox.about(self, 'Socket availability', str(self.THREAD_PARSER.tn.sock_avail()), )
 
 
 def qtWindow(THREAD_PARSER):

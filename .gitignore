@@ -4,7 +4,8 @@
 NOTES.txt
 *.swp
 *.txt
-*aon.log
-*aon.err
+#*-aon.log
+#*-aon.err
 *.pk
-.idea/*
+.idea*
+*~

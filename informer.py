@@ -15,15 +15,17 @@ import os
 from PyQt4 import QtGui, QtCore
 
 from parsers.vlt_parser import VltParser
+from parsers.pop3_parser import PopParser
 
 
 class QtInformer(QtGui.QWidget):
 
     """ Main Informer Window. """
 
-    def __init__(self, THREAD_PARSER):
+    def __init__(self, THREAD_PARSER, POP_PARSER):
         super().__init__()
         self.THREAD_PARSER = THREAD_PARSER
+        self.POP_PARSER = POP_PARSER
         self.initUI()
 
     def initUI(self):
@@ -44,7 +46,8 @@ class QtInformer(QtGui.QWidget):
             QtGui.QMessageBox.No)
 
         if reply == QtGui.QMessageBox.Yes:
-            THREAD_PARSER._stop()
+            self.THREAD_PARSER._stop()
+            self.POP_PARSER._stop()
             event.accept()
         else:
             event.ignore()
@@ -53,14 +56,14 @@ class QtInformer(QtGui.QWidget):
         QtGui.QMessageBox.about(self, 'Socket availability', str(self.THREAD_PARSER.tn.sock_avail()), )
 
 
-def qtWindow(THREAD_PARSER):
+def qtWindow(THREAD_PARSER, POP_PARSER):
     app = QtGui.QApplication(sys.argv)
-    ex = QtInformer(THREAD_PARSER)
+    ex = QtInformer(THREAD_PARSER, POP_PARSER)
     sys.exit(app.exec_())
 
 
 THREAD_PARSER = VltParser()
-
+POP_PARSER = PopParser()
 
 def main():
     """
@@ -68,7 +71,8 @@ def main():
     Window process close parsing process at self close.
     """
     THREAD_PARSER.start()
-    qtWindow(THREAD_PARSER)
+    POP_PARSER.start()
+    qtWindow(THREAD_PARSER, POP_PARSER)
 
 
 if __name__ == '__main__':

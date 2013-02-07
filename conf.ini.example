@@ -1,3 +1,7 @@
 [options]
 server_ip =
 search =
+pop3_ip =
+user =
+#only while testing
+pass =

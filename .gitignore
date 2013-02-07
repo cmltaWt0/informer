@@ -4,8 +4,9 @@
 NOTES.txt
 *.swp
 *.txt
-#*-aon.log
-#*-aon.err
+*.log
+*.err
 *.pk
 .idea*
 *~
+conf.ini

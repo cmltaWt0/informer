@@ -1,5 +1,3 @@
-__author__ = 'Maksim Sokolski'
-
 import os
 import pickle
 import telnetlib
@@ -9,6 +7,7 @@ from datetime import datetime
 
 from viewer.notify import view_tk
 from contact.contact import Contact
+import configparser
 
 
 PATH = os.path.dirname(os.path.realpath(__file__)) + '/../log/' +\
@@ -17,8 +16,12 @@ FILE_OUT = PATH + '-aon.log'
 FILE_ERR = PATH + '-aon.err'
 FILE_DUMP = os.path.dirname(os.path.realpath(__file__)) + '/../contact/book.pk'
 
-HOST = "192.168.52.6"  # Log-server IP-address
-STR_SEARCH = '577140400'  # Searched phone number
+config = configparser.ConfigParser()
+config.read(os.path.dirname(os.path.realpath(__file__)) + '/../conf.ini')
+
+
+HOST = config.get('options', 'server_ip')  # Log-server IP-address
+STR_SEARCH = config.get('options', 'search')  # Searched phone number
 TEXT = "Incoming call from "
 
 CONTACTS_LOCK = threading.Lock()

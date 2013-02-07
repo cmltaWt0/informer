@@ -15,6 +15,7 @@ class PopParser(threading.Thread):
         self.pop3_ip = config.get('options', 'pop3_ip')
         self.pop3_user = config.get('options', 'user')
         self.pop3_pass = config.get('options', 'pass')
+        self.pop3_timeout = config.get('options', 'timeout')
 
     def pop3_parser(self):
         while True:
@@ -24,11 +25,12 @@ class PopParser(threading.Thread):
 
             if pop.stat()[0] > 0:
                 numMessages = len(pop.list()[1])
+                result = ''
                 for i in range(numMessages):
-                    result = pop.retr(i+1)[1][-19] + b'\n' + pop.retr(i+1)[1][-20]
-                    view_tk(result)
+                    result += str(i+1) + ') From: ' + pop.retr(i+1)[1][0].decode('UTF-8').split(':')[1].lstrip()[1:-1] + '\n'
+                view_tk(result)
 
             pop.quit()
-            time.sleep(120)
+            time.sleep(int(self.pop3_timeout))
 
     run = pop3_parser

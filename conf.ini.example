@@ -5,3 +5,4 @@ pop3_ip =
 user =
 #only while testing
 pass =
+timeout =

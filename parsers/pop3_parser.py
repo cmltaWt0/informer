@@ -15,6 +15,7 @@ class PopParser(threading.Thread):
         self.pop3_ip = config.get('options', 'pop3_ip')
         self.pop3_user = config.get('options', 'user')
         self.pop3_pass = config.get('options', 'pass')
+        self.pop3_timeout = config.get('options', 'timeout')
 
     def pop3_parser(self):
         while True:
@@ -30,6 +31,6 @@ class PopParser(threading.Thread):
                 view_tk(result)
 
             pop.quit()
-            time.sleep(120)
+            time.sleep(int(self.pop3_timeout))
 
     run = pop3_parser

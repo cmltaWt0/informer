@@ -117,7 +117,10 @@ class VltParser(threading.Thread):
             search_list = str_all.split()
             if STR_SEARCH in search_list:
                 call_id = search_list[-4]  # Caller-id recognizing
-                call_time = search_list[-19].split('/')[1] + ' ' +\
-                            search_list[-19].split('/')[2] + ':' +\
-                            search_list[-17]  # Call time recognizing
-                return '0' + call_id, call_time  # Tuple returning
+                if call_id == STR_SEARCH:
+                    return None
+                else:
+                    call_time = search_list[-19].split('/')[1] + ' ' +\
+                                search_list[-19].split('/')[2] + ':' +\
+                                search_list[-17]  # Call time recognizing
+                    return '0' + call_id, call_time  # Tuple returning

@@ -32,34 +32,33 @@ def vlt_parser(self):
     while True:
         try:
             self.tn = telnetlib.Telnet(HOST)
-            str_all = str(self.tn.read_until(b'\r\r\n\r\n'))
-            try:
-                call_info = self.parse_string(str_all, STR_SEARCH)
-            except (TypeError, ValueError) as e:
-                self.write_log(FILE_ERR, 'Error parsing: ', e)
-            else:
-                if call_info is not None:
-                    result = TEXT + call_info[0] + ' ' + call_info[1]
-
-                    self.CONTACTS_LOCK.acquire(1)
-                    for contact in self.contacts_book:
-                        if call_info[0] == contact.phone:
-                            caller = contact
-                            break
-                    else:
-                        caller = Contact(call_info[0])
-                        self.contacts_book.append(caller)
-                        self.save_contacts()
-                    self.CONTACTS_LOCK.release()
-
-                    self.write_log(FILE_OUT, result + ' ' + str(caller))
-                    view_tk(result + '\n' + str(caller))
         except Exception as e:
             self.write_log(FILE_ERR, 'Connection to server is not available: ', e)
             sleep(5)
-        finally:
-            if self.tn:
-                self.tn.close()
+        else:
+            while True:
+                str_all = self.tn.read_until(b'\r\r\n\r\n').decode('UTF-8')
+                try:
+                    call_info = self.parse_string(str_all, STR_SEARCH)
+                except (TypeError, ValueError) as e:
+                    self.write_log(FILE_ERR, 'Error parsing: ', e)
+                else:
+                    if call_info is not None:
+                        result = TEXT + call_info[0] + ' ' + call_info[1]
+
+                        self.CONTACTS_LOCK.acquire(1)
+                        for contact in self.contacts_book:
+                            if call_info[0] == contact.phone:
+                                caller = contact
+                                break
+                        else:
+                            caller = Contact(call_info[0])
+                            self.contacts_book.append(caller)
+                            self.save_contacts()
+                        self.CONTACTS_LOCK.release()
+
+                        self.write_log(FILE_OUT, result + ' ' + str(caller))
+                        view_tk(result + '\n' + str(caller))
 
 
 class VltParser(threading.Thread):

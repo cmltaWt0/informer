@@ -53,7 +53,7 @@ class QtInformer(QtGui.QWidget):
             event.ignore()
 
     def clicked(self):
-        QtGui.QMessageBox.about(self, 'Socket availability', str(self.THREAD_PARSER.tn.sock_avail()), )
+        self.POP_PARSER.pop3_parser()
 
 
 def qtWindow(THREAD_PARSER, POP_PARSER):

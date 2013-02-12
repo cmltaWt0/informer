@@ -33,9 +33,9 @@ class QtInformer(QtGui.QWidget):
         self.setWindowTitle("Informer's main window")
         self.setWindowIcon(QtGui.QIcon(os.path.dirname(os.path.realpath(__file__)) + 
 					'/call.png'))
-        self.btn = QtGui.QPushButton('Button', self)
+        self.btn = QtGui.QPushButton('Check mail', self)
         self.connect(self.btn, QtCore.SIGNAL("clicked()"), self.clicked)
-        self.btn.setToolTip('This is a <b>QPushButton</b> widget')
+        self.btn.setToolTip('Click for check you mail.')
         self.show()
 
     def closeEvent(self, event):
@@ -53,7 +53,12 @@ class QtInformer(QtGui.QWidget):
             event.ignore()
 
     def clicked(self):
-        QtGui.QMessageBox.about(self, 'Socket availability', str(self.THREAD_PARSER.tn.sock_avail()), )
+        mails = self.POP_PARSER.pop3_parser()
+        for i,j in enumerate(mails):
+            self.label = QtGui.QLabel(j[:-1], self)
+            self.label.setMinimumWidth(200)
+            self.label.move(20, 30+i*25)
+            self.label.show()
 
 
 def qtWindow(THREAD_PARSER, POP_PARSER):

@@ -9,6 +9,11 @@ from viewer.notify import view_tk
 from contact.contact import Contact
 import configparser
 
+import smtplib
+from email.mime.multipart import MIMEMultipart
+from email.mime.text import MIMEText
+from email.utils import formatdate
+
 
 PATH = os.path.dirname(os.path.realpath(__file__)) + '/../log/' +\
        "{:%d.%m.%Y}".format(datetime.now())
@@ -21,7 +26,10 @@ config.read(os.path.dirname(os.path.realpath(__file__)) + '/../conf.ini')
 
 
 HOST = config.get('options', 'server_ip')  # Log-server IP-address
-STR_SEARCH = config.get('options', 'search')  # Searched phone number
+
+items = config.items('search')
+SEARCH_LIST = [item[1] for item in items if item[1] != '']  # All numbers to monitor
+
 TEXT = "Incoming call from "
 
 CONTACTS_LOCK = threading.Lock()
@@ -39,7 +47,7 @@ def vlt_parser(self):
             while True:
                 str_all = self.tn.read_until(b'\r\r\n\r\n').decode('UTF-8')
                 try:
-                    call_info = self.parse_string(str_all, STR_SEARCH)
+                    call_info = self.parse_string(str_all, SEARCH_LIST)
                 except (TypeError, ValueError) as e:
                     self.write_log(FILE_ERR, 'Error parsing: ', e)
                 else:
@@ -57,8 +65,11 @@ def vlt_parser(self):
                             self.save_contacts()
                         self.CONTACTS_LOCK.release()
 
-                        self.write_log(FILE_OUT, result + ' ' + str(caller))
-                        view_tk(result + '\n' + str(caller))
+                        self.write_log(FILE_OUT, result + ' ' + str(caller) + 'to 0' + call_info[2])
+                        if call_info[2] == config.get('search', 'search1'):
+                            view_tk(result + '\n' + str(caller))
+                        else:
+                            self.send_mail(result + ' ' + str(caller) + 'to 0' + call_info[2])
 
 
 class VltParser(threading.Thread):
@@ -94,26 +105,41 @@ class VltParser(threading.Thread):
         except IOError as e:
             view_tk(str(e))
 
-    def parse_string(self, str_all, STR_SEARCH):
+    def parse_string(self, str_all, search_list):
         """
         Searching for a number(STR_SEARCH) in str_all.
 
         Assume that str_all and STR_SEARCH is a not empty string
         Result = string of caller_id and date-time of call
         """
-        if not isinstance(str_all, str) or not isinstance(STR_SEARCH, str):
-            raise TypeError('Input string type value please.')
-        elif str_all == '' or str_all == ' '\
-             or STR_SEARCH == '' or STR_SEARCH == ' ':
-            raise ValueError('Dont input space or empty string.')
-        else:
-            search_list = str_all.split()
-            if STR_SEARCH in search_list:
-                call_id = search_list[-4]  # Caller-id recognizing
-                if call_id == STR_SEARCH:
-                    return None
-                else:
-                    call_time = search_list[-19].split('/')[1] + ' ' +\
-                                search_list[-19].split('/')[2] + ':' +\
-                                search_list[-17]  # Call time recognizing
-                    return '0' + call_id, call_time  # Tuple returning
+        for search in search_list:
+            if not isinstance(str_all, str) or not isinstance(search, str):
+                raise TypeError('Input string type value please.')
+            elif str_all == '' or str_all == ' '\
+                or search == '' or search == ' ':
+                raise ValueError('Dont input space or empty string.')
+            else:
+                search_list = str_all.split()
+                if search in search_list:
+                    call_id = search_list[-4]  # Caller-id recognizing
+                    if call_id == search:
+                        return None
+                    else:
+                        call_time = search_list[-19].split('/')[1] + ' ' +\
+                                    search_list[-19].split('/')[2] + ':' +\
+                                    search_list[-17]  # Call time recognizing
+                        return '0' + call_id, call_time, search
+
+    def send_mail(self, reply):
+        """
+        send_mail(reply: str) -> None
+        """
+        msg = MIMEMultipart()
+        msg['From'] = config.get('smtp', 'from')
+        msg['Date'] = formatdate(localtime=True)
+        msg['Subject'] = 'Missed call.'
+        msg['To'] = config.get('smtp', 'to')
+        msg.attach(MIMEText(reply))
+
+        smtp = smtplib.SMTP(config.get('smtp', 'smtp_ip'), int(config.get('smtp', 'smtp_port')))
+        smtp.sendmail(config.get('smtp', 'from'), config.get('smtp', 'to'), msg.as_string())

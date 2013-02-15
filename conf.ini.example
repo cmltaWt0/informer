@@ -1,8 +1,19 @@
 [options]
 server_ip =
-search =
 pop3_ip =
 user =
 #only while testing
 pass =
 timeout =
+
+[search]
+search1 =
+search2 =
+search3 =
+search4 =
+
+[smtp]
+smtp_ip =
+smtp_port =
+from =
+to =

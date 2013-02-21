@@ -9,13 +9,13 @@ In the future, the application must be finalized in some GUI-interface.
 Need to implement running in Windows.
 """
 
-import sys
-import os
+from sys import argv, exit
+from os import path
 
 from PyQt4 import QtGui, QtCore
 
-from parsers.vlt_parser import VltParser
-from parsers.pop3_parser import PopParser
+from parser import TelnetParser
+from parser import PopParser
 
 
 class QtInformer(QtGui.QWidget):
@@ -31,11 +31,11 @@ class QtInformer(QtGui.QWidget):
     def initUI(self):
         self.setGeometry(1000, 200, 350, 550)
         self.setWindowTitle("Informer's main window")
-        self.setWindowIcon(QtGui.QIcon(os.path.dirname(os.path.realpath(__file__)) + 
+        self.setWindowIcon(QtGui.QIcon(path.dirname(path.realpath(__file__)) +
 					'/call.png'))
-        self.btn = QtGui.QPushButton('Button', self)
+        self.btn = QtGui.QPushButton('Check mail', self)
         self.connect(self.btn, QtCore.SIGNAL("clicked()"), self.clicked)
-        self.btn.setToolTip('This is a <b>QPushButton</b> widget')
+        self.btn.setToolTip('Click for check you mail.')
         self.show()
 
     def closeEvent(self, event):
@@ -53,16 +53,21 @@ class QtInformer(QtGui.QWidget):
             event.ignore()
 
     def clicked(self):
-        QtGui.QMessageBox.about(self, 'Socket availability', str(self.THREAD_PARSER.tn.sock_avail()), )
+        mails = self.POP_PARSER.pop3_parser()
+        for i,j in enumerate(mails):
+            self.label = QtGui.QLabel(j[:-1], self)
+            self.label.setMinimumWidth(200)
+            self.label.move(20, 30+i*25)
+            self.label.show()
 
 
 def qtWindow(THREAD_PARSER, POP_PARSER):
-    app = QtGui.QApplication(sys.argv)
+    app = QtGui.QApplication(argv)
     ex = QtInformer(THREAD_PARSER, POP_PARSER)
-    sys.exit(app.exec_())
+    exit(app.exec_())
 
 
-THREAD_PARSER = VltParser()
+TELNET_PARSER = TelnetParser()
 POP_PARSER = PopParser()
 
 def main():
@@ -70,9 +75,9 @@ def main():
     Starting window and parsing process.
     Window process close parsing process at self close.
     """
-    THREAD_PARSER.start()
+    TELNET_PARSER.start()
     POP_PARSER.start()
-    qtWindow(THREAD_PARSER, POP_PARSER)
+    qtWindow(TELNET_PARSER, POP_PARSER)
 
 
 if __name__ == '__main__':

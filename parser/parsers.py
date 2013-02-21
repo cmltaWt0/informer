@@ -13,7 +13,7 @@ from email.mime.text import MIMEText
 from email.utils import formatdate
 
 from viewer.notify import view_tk, view_notify
-from contact.contact import Contact
+from contact import Contact
 
 
 class CommonParser(Thread):

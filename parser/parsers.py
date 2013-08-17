@@ -51,8 +51,10 @@ class CommonParser(Thread):
         msg['To'] = cls.config.get('smtp', 'to')
         msg.attach(MIMEText(reply))
 
-        smtp = SMTP(cls.config.get('smtp', 'smtp_ip'), int(cls.config.get('smtp', 'smtp_port')))
-        smtp.sendmail(cls.config.get('smtp', 'from'), cls.config.get('smtp', 'to'), msg.as_string())
+        smtp = SMTP(cls.config.get('smtp', 'smtp_ip'),
+                    int(cls.config.get('smtp', 'smtp_port')))
+        smtp.sendmail(cls.config.get('smtp', 'from'),
+                      cls.config.get('smtp', 'to'), msg.as_string())
 
     def run(self):
         while True:
@@ -141,11 +143,13 @@ class TelnetParser(CommonParser):
                             self.save_contacts()
                         self.CONTACTS_LOCK.release()
 
-                        self.write_log(self.FILE_OUT, result + ' ' + str(caller) + ' to 0' + call_info[2])
+                        self.write_log(self.FILE_OUT, result + ' ' +
+                                       str(caller) + ' to 0' + call_info[2])
                         if call_info[2] == super().config.get('search', 'search1'):
                             view_tk(result + '\n' + str(caller))
                         else:
-                            self.send_mail(result + ' ' + str(caller) + ' to 0' + call_info[2])
+                            self.send_mail(result + ' ' + str(caller) +
+                                           ' to 0' + call_info[2])
 
 
 class PopParser(CommonParser):
@@ -172,7 +176,8 @@ class PopParser(CommonParser):
             numMessages = len(pop.list()[1])
             result = ''
             for i in range(numMessages):
-                tmp = str(i + 1) + ' From: ' + pop.retr(i + 1)[1][0].decode('UTF-8').split(':')[1].lstrip()[1:-1] + '\n'
+                tmp = (str(i + 1) + ' From: ' +pop.retr(i + 1)[1][0].
+                       decode('UTF-8').split(':')[1].lstrip()[1:-1] + '\n')
                 result += tmp
                 mails.append(tmp)
             view_notify(result)

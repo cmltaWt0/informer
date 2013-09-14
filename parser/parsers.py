@@ -151,10 +151,13 @@ class TelnetParser(CommonParser):
 class PopParser(CommonParser):
     def __init__(self):
         super().__init__()
+        PATH = path.dirname(path.realpath(__file__)) + '/../log/' + \
+               "{:%d.%m.%Y}".format(datetime.now())
         self.pop3_ip = super().config.get('options', 'pop3_ip')
         self.pop3_user = super().config.get('options', 'user')
         self.pop3_pass = super().config.get('options', 'pass')
         self.pop3_timeout = super().config.get('options', 'timeout')
+        self.FILE_ERR = PATH + '-pop.err'
 
     def pop3_parser(self):
         """
@@ -163,22 +166,28 @@ class PopParser(CommonParser):
         :rtype : str
         :return: mails
         """
-        pop = POP3(self.pop3_ip)
-        pop.user(self.pop3_user)
-        pop.pass_(self.pop3_pass)
         mails = []
+        try:
+            pop = POP3(self.pop3_ip)
+        except Exception as e:
+            self.write_log(self.FILE_ERR, 'Connection to server is not available: ', e)
+        else:
+            pop.user(self.pop3_user)
+            pop.pass_(self.pop3_pass)
 
-        if pop.stat()[0] > 0:
-            numMessages = len(pop.list()[1])
-            result = ''
-            for i in range(numMessages):
-                tmp = str(i + 1) + ' From: ' + pop.retr(i + 1)[1][0].decode('UTF-8').split(':')[1].lstrip()[1:-1] + '\n'
-                result += tmp
-                mails.append(tmp)
-            view_notify(result)
+            if pop.stat()[0] > 0:
+                numMessages = len(pop.list()[1])
+                result = ''
+                for i in range(numMessages):
+                    tmp = str(i + 1) + ' From: ' + pop.retr(i + 1)[1][0].\
+                          decode('UTF-8').split(':')[1].lstrip()[1:-1] + '\n'
+                    result += tmp
+                    mails.append(tmp)
+                view_notify(result)
 
-        pop.quit()
-        return mails
+            pop.quit()
+        finally:
+            return mails
 
     def parser(self):
         self.pop3_parser()

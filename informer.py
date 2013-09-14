@@ -19,7 +19,6 @@ from parser import PopParser
 
 
 class QtInformer(QtGui.QWidget):
-
     """ Main Informer Window. """
 
     def __init__(self, THREAD_PARSER, POP_PARSER):
@@ -32,7 +31,7 @@ class QtInformer(QtGui.QWidget):
         self.setGeometry(1000, 200, 350, 550)
         self.setWindowTitle("Informer's main window")
         self.setWindowIcon(QtGui.QIcon(path.dirname(path.realpath(__file__)) +
-					'/call.png'))
+                                       '/call.png'))
         self.btn = QtGui.QPushButton('Check mail', self)
         self.connect(self.btn, QtCore.SIGNAL("clicked()"), self.clicked)
         self.btn.setToolTip('Click for check you mail.')
@@ -40,10 +39,11 @@ class QtInformer(QtGui.QWidget):
 
     def closeEvent(self, event):
         reply = QtGui.QMessageBox.question(self, 'Message',
-            "Close telnet session?\n" + str(self.THREAD_PARSER.contacts_book),
-            QtGui.QMessageBox.Yes |
-            QtGui.QMessageBox.No,
-            QtGui.QMessageBox.No)
+                                           "Close telnet session?\n" +
+                                           str(self.THREAD_PARSER.contacts_book),
+                                           QtGui.QMessageBox.Yes |
+                                           QtGui.QMessageBox.No,
+                                           QtGui.QMessageBox.No)
 
         if reply == QtGui.QMessageBox.Yes:
             self.THREAD_PARSER._stop()
@@ -54,10 +54,10 @@ class QtInformer(QtGui.QWidget):
 
     def clicked(self):
         mails = self.POP_PARSER.pop3_parser()
-        for i,j in enumerate(mails):
+        for i, j in enumerate(mails):
             self.label = QtGui.QLabel(j[:-1], self)
             self.label.setMinimumWidth(200)
-            self.label.move(20, 30+i*25)
+            self.label.move(20, 30 + i * 25)
             self.label.show()
 
 
@@ -69,6 +69,7 @@ def qtWindow(THREAD_PARSER, POP_PARSER):
 
 TELNET_PARSER = TelnetParser()
 POP_PARSER = PopParser()
+
 
 def main():
     """

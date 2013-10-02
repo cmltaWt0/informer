@@ -64,8 +64,8 @@ class CommonParser(Thread):
 class TelnetParser(CommonParser):
     def __init__(self):
         super().__init__()
-        PATH = path.dirname(path.realpath(__file__)) + '/../log/' + \
-               "{:%d.%m.%Y}".format(datetime.now())
+        PATH = (path.dirname(path.realpath(__file__)) + '/../log/' +
+                "{:%d.%m.%Y}".format(datetime.now()))
         self.FILE_OUT = PATH + '-aon.log'
         self.FILE_ERR = PATH + '-aon.err'
         self.FILE_DUMP = path.dirname(path.realpath(__file__)) + '/../contact/book.pk'
@@ -99,9 +99,9 @@ class TelnetParser(CommonParser):
         for search in search_list:
             if not isinstance(str_all, str) or not isinstance(search, str):
                 raise TypeError('Input string type value please.')
-            elif str_all == '' or str_all == ' ' \
-                or search == '' or search == ' ':
-                raise ValueError('Dont input space or empty string.')
+            elif (str_all == '' or str_all == ' ' or
+                  search == '' or search == ' '):
+                raise ValueError("Don't input space or empty string.")
             else:
                 search_list = str_all.split()
                 if search in search_list:
@@ -109,9 +109,9 @@ class TelnetParser(CommonParser):
                     if call_id == search:
                         return None
                     else:
-                        call_time = search_list[-19].split('/')[1] + ' ' + \
-                                    search_list[-19].split('/')[2] + ':' + \
-                                    search_list[-17]  # Call time recognizing
+                        call_time = (search_list[-19].split('/')[1] + ' ' +
+                                     search_list[-19].split('/')[2] + ':' +
+                                     search_list[-17])  # Call time recognizing
                         return '0' + call_id, call_time, search
 
     def parser(self):
@@ -155,8 +155,8 @@ class TelnetParser(CommonParser):
 class PopParser(CommonParser):
     def __init__(self):
         super().__init__()
-        PATH = path.dirname(path.realpath(__file__)) + '/../log/' + \
-               "{:%d.%m.%Y}".format(datetime.now())
+        PATH = (path.dirname(path.realpath(__file__)) + '/../log/' +
+                "{:%d.%m.%Y}".format(datetime.now()))
         self.pop3_ip = super().config.get('options', 'pop3_ip')
         self.pop3_user = super().config.get('options', 'user')
         self.pop3_pass = super().config.get('options', 'pass')
@@ -183,8 +183,8 @@ class PopParser(CommonParser):
                 numMessages = len(pop.list()[1])
                 result = ''
                 for i in range(numMessages):
-                    tmp = str(i + 1) + ' From: ' + pop.retr(i + 1)[1][0].\
-                          decode('UTF-8').split(':')[1].lstrip()[1:-1] + '\n'
+                    tmp = (str(i + 1) + ' From: ' + pop.retr(i + 1)[1][0].
+                           decode('UTF-8').split(':')[1].lstrip()[1:-1] + '\n')
                     result += tmp
                     mails.append(tmp)
                 view_notify(result)

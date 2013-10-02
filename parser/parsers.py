@@ -119,7 +119,7 @@ class TelnetParser(CommonParser):
         try:
             self.tn = Telnet(self.HOST)
         except Exception as e:
-            self.write_log(self.FILE_ERR, 'Connection to server is not available: ', e)
+            self.write_log(self.FILE_ERR, 'Connection to telnet server is not available: ', e)
             sleep(5)
         else:
             while True:
@@ -173,12 +173,11 @@ class PopParser(CommonParser):
         mails = []
         try:
             pop = POP3(self.pop3_ip)
-        except Exception as e:
-            self.write_log(self.FILE_ERR, 'Connection to server is not available: ', e)
-        else:
             pop.user(self.pop3_user)
             pop.pass_(self.pop3_pass)
-
+        except Exception as e:
+            self.write_log(self.FILE_ERR, 'Connection to POP3 server is not available: ', e)
+        else:
             if pop.stat()[0] > 0:
                 numMessages = len(pop.list()[1])
                 result = ''
